@@ -35,23 +35,11 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
-index_template = """
-<!DOCTYPE html>
-<html>
-    <head> </head>
-    <body>
-        {% if current_user.is_authenticated %}
-            <a href="/logout/"> Logout </a>
-        {% else %}
-            <a href="/login/"> Login </a>
-        {% endif %}
-        &nbsp&nbsp<a href="/blog/"> Blog </a>
-        &nbsp&nbsp<a href="/blog/sitemap.xml">Sitemap</a>
-        &nbsp&nbsp<a href="/blog/feeds/all.atom.xml">ATOM</a>
-        &nbsp&nbsp<a href="/fileupload/">FileUpload</a>
-    </body>
-</html>
-"""
+
+
+# Importing HTML
+with open('main.html', 'r') as f:
+    index_template = f.read()
 
 @app.route("/")
 def index():
