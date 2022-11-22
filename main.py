@@ -59,3 +59,5 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000, use_reloader=True)
+blogging_engine = BloggingEngine()
+blogging_engine.init_app(app, storage)
