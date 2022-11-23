@@ -2,7 +2,7 @@ from flask import Flask, render_template_string, redirect
 from sqlalchemy import create_engine, MetaData
 from flask_login import UserMixin, LoginManager, login_user, logout_user
 from flask_blogging import SQLAStorage, BloggingEngine
-
+import os
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"  # for WTF-forms and login
 app.config["BLOGGING_URL_PREFIX"] = "/blog"
@@ -28,7 +28,7 @@ class User(UserMixin):
         self.id = user_id
 
     def get_name(self):
-        return "Paul Dirac"  # typically the user's name
+        return "Chase Munro"  # typically the user's name
 
 @login_manager.user_loader
 @blog_engine.user_loader
@@ -46,11 +46,36 @@ def index():
     return render_template_string(index_template)
 
 @app.route("/login/")
+def login():  
+    cwd = os.getcwd()  # Get the current working directory (cwd)
+    files = os.listdir(cwd)
+    print("Files in %r: %s" % (cwd, files))
+
+
+
+    user = input("Username: ")
+    passw = input("Password: ")
+
+
+    f = open("users.txt", "r")
+    for line in f.readlines():
+        us, pw = line.strip().split("|")
+        if (user in us) and (passw in pw):
+            print("Login successful!")
+            user = User("user")
+            login_user(user)
+            return redirect("/blog")
+        else:
+            print("Wrong username/password")
+            return redirect("/")
+            
+
+'''
 def login():
     user = User("testuser")
     login_user(user)
     return redirect("/blog")
-
+'''
 @app.route("/logout/")
 def logout():
     logout_user()
@@ -59,5 +84,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000, use_reloader=True)
-blogging_engine = BloggingEngine()
-blogging_engine.init_app(app, storage)
