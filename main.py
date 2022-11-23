@@ -3,6 +3,8 @@ from sqlalchemy import create_engine, MetaData
 from flask_login import UserMixin, LoginManager, login_user, logout_user
 from flask_blogging import SQLAStorage, BloggingEngine
 import os
+import hashlib
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"  # for WTF-forms and login
 app.config["BLOGGING_URL_PREFIX"] = "/blog"
@@ -64,10 +66,14 @@ def login():
             print("Login successful!")
             user = User("user")
             login_user(user)
+            
             return redirect("/blog")
         else:
             print("Wrong username/password")
             return redirect("/")
+   
+
+
             
 
 '''
