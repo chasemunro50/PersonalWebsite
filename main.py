@@ -66,8 +66,7 @@ def login():
             print("Login successful!")
             user = User("user")
             login_user(user)
-            
-            return redirect("/blog")
+            return redirect("/")
         else:
             print("Wrong username/password")
             return redirect("/")
