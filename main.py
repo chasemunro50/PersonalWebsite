@@ -54,7 +54,6 @@ def index():
 def login():  
     cwd = os.getcwd()  # Get the current working directory (cwd)
     files = os.listdir(cwd)
-    print("Files in %r: %s" % (cwd, files))
 
     #Login Input
     user = input("Username: ")
@@ -71,14 +70,19 @@ def login():
         passSafedecodedBytes =base64.urlsafe_b64decode(pw) #Bytes
         decoded_pass = str(passSafedecodedBytes, "utf-8") #Str
 
-        if (user in decoded_user) and (passw in decoded_pass):
-            print("Login successful!")
-            user = User("user")
-            login_user(user)
-            return redirect("/")
-        else:
-            print("Wrong username/password")
-            return redirect("/")
+        login_loop = 1
+        
+        while login_loop != 0:
+
+            if (user in decoded_user) and (passw in decoded_pass):
+                print("Login successful!")
+                user = User("user")
+                login_user(user)
+                return redirect("/")
+                login_loop = 0
+            else:
+                print("Wrong username/password")
+                return redirect("/")
    
 
 @app.route("/logout/")
