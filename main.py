@@ -3,7 +3,8 @@ from sqlalchemy import create_engine, MetaData
 from flask_login import UserMixin, LoginManager, login_user, logout_user
 from flask_blogging import SQLAStorage, BloggingEngine
 import os
-import hashlib
+import base64
+from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"  # for WTF-forms and login
@@ -43,9 +44,11 @@ def load_user(user_id):
 with open('main.html', 'r') as f:
     index_template = f.read()
 
+
 @app.route("/")
 def index():
     return render_template_string(index_template)
+
 
 @app.route("/login/")
 def login():  
@@ -54,15 +57,18 @@ def login():
     print("Files in %r: %s" % (cwd, files))
 
 
-
-    user = input("Username: ")
-    passw = input("Password: ")
-
-
     f = open("users.txt", "r")
     for line in f.readlines():
         us, pw = line.strip().split("|")
-        if (user in us) and (passw in pw):
+
+        #Decoding Username and password
+        userSafedecodedBytes =base64.urlsafe_b64decode(us) #Bytes
+        decoded_user = str(userSafedecodedBytes, "utf-8") #Str
+
+        passSafedecodedBytes =base64.urlsafe_b64decode(pw) #Bytes
+        decoded_pass = str(passSafedecodedBytes, "utf-8") #Str
+
+        if (user in decoded_user) and (pw in decoded_pass):
             print("Login successful!")
             user = User("user")
             login_user(user)
@@ -72,15 +78,6 @@ def login():
             return redirect("/")
    
 
-
-            
-
-'''
-def login():
-    user = User("testuser")
-    login_user(user)
-    return redirect("/blog")
-'''
 @app.route("/logout/")
 def logout():
     logout_user()
@@ -89,3 +86,20 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000, use_reloader=True)
+
+
+#Code for creating new encyrpted usernames/passwords 
+'''
+name = "username"
+userSafeEncodedBytes = base64.urlsafe_b64encode(name.encode("utf-8"))
+userSafeEncodedStr = str(userSafeEncodedBytes, "utf-8")
+print(userSafeEncodedStr)
+
+password1 = "password"
+passSafeEncodedBytes = base64.urlsafe_b64encode(password1.encode("utf-8"))
+passSafeEncodedStr = str(passSafeEncodedBytes, "utf-8")
+print(passSafeEncodedStr)
+
+user = input("Username: ")
+passw = input("Password: ")
+'''
