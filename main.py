@@ -56,6 +56,9 @@ def login():
     files = os.listdir(cwd)
     print("Files in %r: %s" % (cwd, files))
 
+    #Login Input
+    user = input("Username: ")
+    passw = input("Password: ")
 
     f = open("users.txt", "r")
     for line in f.readlines():
@@ -68,7 +71,7 @@ def login():
         passSafedecodedBytes =base64.urlsafe_b64decode(pw) #Bytes
         decoded_pass = str(passSafedecodedBytes, "utf-8") #Str
 
-        if (user in decoded_user) and (pw in decoded_pass):
+        if (user in decoded_user) and (passw in decoded_pass):
             print("Login successful!")
             user = User("user")
             login_user(user)
