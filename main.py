@@ -1,3 +1,5 @@
+# I believe flask version has to be 2.2.2 for it to work properly
+
 from flask import Flask, render_template_string, redirect
 from sqlalchemy import create_engine, MetaData
 from flask_login import UserMixin, LoginManager, login_user, logout_user
